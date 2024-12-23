@@ -139,3 +139,18 @@ export async function getProperties({ filter, query, limit }: { filter: string, 
         return [];
     }
 }
+
+export async function getPropertyById(id: string): Promise<PropertyProps> {
+    try {
+        const response = await databases.listDocuments(
+            databaseId!,
+            propertiesCollectionId!,
+            [Query.equal('$id', id)]
+        )
+
+        return response.documents[0] as PropertyProps
+    } catch (error) {
+        console.error(error)
+        throw new Error('Failed to get property')
+    }
+}
