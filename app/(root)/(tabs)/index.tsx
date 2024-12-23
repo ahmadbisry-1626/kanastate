@@ -9,7 +9,7 @@ import { useAppwrite } from "@/lib/useAppwrite";
 import { PropertyProps } from "@/types";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, RefreshControl, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
@@ -17,6 +17,7 @@ export default function Index() {
     const params = useLocalSearchParams<{ query: string, filter?: string }>()
     const [greeting, setGreeting] = useState('');
     const { query, filter } = params
+    const [refresh, setRefresh] = useState(false)
 
     const { data: latestProp, loading: latestPropsLoading } = useAppwrite<PropertyProps[], any>({
         fn: getLatestProperties
@@ -31,6 +32,16 @@ export default function Index() {
         },
         skip: true
     })
+
+    const handleRefreshRecommend = async () => {
+        setRefresh(true)
+        await refetch({
+            filter: filter!,
+            query: query,
+            limit: 6
+        })
+        setRefresh(false)
+    }
 
     const handleCardPress = (id: string) => router.push(`/properties/${id}`)
 
@@ -75,6 +86,7 @@ export default function Index() {
                         <NoResults />
                     )
                 }
+                refreshControl={<RefreshControl refreshing={refresh} onRefresh={handleRefreshRecommend} />}
                 ListHeaderComponent={
                     <>
                         <View className="flex flex-row items-center justify-between mt-5">

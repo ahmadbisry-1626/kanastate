@@ -1,6 +1,5 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Tabs } from 'expo-router'
 import icons from '@/constants/icons'
 
@@ -26,6 +25,7 @@ const TabsLayout = () => {
                 backgroundColor: 'white',
                 position: 'absolute',
                 borderTopColor: '#0061FF1A',
+                borderColor: '#0061FF1A',
                 borderTopWidth: 1,
                 minHeight: 70
 
